@@ -148,9 +148,9 @@ onBeforeMount(async () => {
             {{ item.title }}
           </h2>
           <p class="start">
-            <img v-for="el in Math.floor(Number(('' + item.score)))" src="/images/start.png" width="16">
+            <img v-for="_ in Math.floor(Number(('' + item.score)))" src="/images/start.png" width="16">
             <img src="/images/startx.png" width="16" v-if="('' + item.score).includes('.')">
-            <img v-for="el in 5" src="/images/start-.png" width="16">
+            <img v-for="_ in 5" src="/images/start-.png" width="16">
           </p>
           <p class="text_22">
             {{ item.main_title }}

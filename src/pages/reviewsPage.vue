@@ -9,7 +9,7 @@ onBeforeMount(async() => {
   channelResult.value = res;
   total.value = Math.ceil(t / 10);
   id.value = params.id.slice(0, -1)
-  page.value = params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
+  page.value = +params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
 })
 </script>
 <template>

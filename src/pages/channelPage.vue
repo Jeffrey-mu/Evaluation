@@ -4,20 +4,25 @@ let channelResult = ref([])
 let total = ref(0)
 let page = ref(0)
 let id = ref('')
-let menu = ref([])
+interface Menu {
+  id: string;
+  name: string;
+  type: string;
+}
+let menu = ref<Menu[]>([])
 onBeforeMount(async () => {
   let { res, total: t } = await getJson('/api/channel/channel-' + params.id + '.json');
   channelResult.value = res;
   total.value = Math.ceil(t / 10);
   id.value = params.id.slice(0, -1)
-  page.value = params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
+  page.value = +params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
   menu.value = await getJson('../api/channel/menu.json');
 })
 </script>
 <template>
   <div class="typePage channelPage" v-if="channelResult.length">
     <div class="left">
-      <h2 style="margin-top: 20px; font-size: 28px;">{{ menu.find(el => el.id == id.split('-')[1]).name }}</h2>
+      <h2 style="margin-top: 20px; font-size: 28px;">{{ menu.find(el => el.id == id.split('-')[1])?.name }}</h2>
       <div class="typePage_top_content">
         <a :href="channelResult[0].type == 1 ? './detailsBestpicks?id=' + channelResult[0].id + '&type=' + type : './detailsReviews?id=' + channelResult[0].id + '&type=' + type"
           class="left">

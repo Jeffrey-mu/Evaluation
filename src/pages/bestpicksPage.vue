@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { dataModel } from '~/composables';
 let params = getQueryParams()
-let channelResult = ref([])
+let channelResult = ref<dataModel[]>([])
 let total = ref(0)
 let page = ref(0)
 let id = ref('')
@@ -9,7 +10,7 @@ onBeforeMount(async() => {
   channelResult.value = res;
   total.value = Math.ceil(t / 10);
   id.value = params.id.slice(0, -1)
-  page.value = params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
+  page.value = +params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
 })
 </script>
 <template>
@@ -76,7 +77,7 @@ onBeforeMount(async() => {
           <a :class="{ active: item == page - 1 }"
             :href="'./bestpicksPage?id=' + id + item + '&type=' + type">{{ item }}</a>
         </span>
-        <span @click="handleNextPage">Next Page</span>
+        <span @click="handleNextPage(`./bestpicksPage?id=${id  + page}&type=4`)">Next Page</span>
       </div>
     </div>
   </div>

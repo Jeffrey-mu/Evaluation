@@ -1,6 +1,6 @@
 <script setup lang="ts">
 let params = getQueryParams()
-let details_info = ref({})
+let details_info = ref<any>({})
 console.log(params)
 onBeforeMount(async () => {
   details_info.value = await getJson('/api/details/details-' + params.id + '.json');

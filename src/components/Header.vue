@@ -1,15 +1,18 @@
 <script setup lang="ts">
 function handleShowMenu() {
-  document.querySelector('.menu_phone').style.width = '100vw';
+  menu_hooks().setMobileMenuWidth('100vw')
 }
-function shareLink(path) {
+const { searchResultFilter } = searchResultHooks()
+function shareLink(path: string) {
   let goPath = path.replace('xxxxx', window.location.href)
   window.open(goPath)
 }
 let showSearch = window.location.pathname.includes('search') ? true : false;
-let searchResult= []
-let adv= []
-let searchKeys= ""
+
+let searchKeys= ref('')
+watch(searchKeys, (value) => {
+  searchResultFilter(value)
+})
 </script>
 
 <template>

@@ -3,9 +3,38 @@ let params = getQueryParams()
 let details_info = ref<any>({})
 let active = ref<any>('')
 console.log(params)
+watch(active, (value) => {
+  // @ts-ignore
+  setTimeout(() => { document.querySelector('.included').scrollLeft = value * 150 }, 200)
+})
 onBeforeMount(async () => {
   details_info.value = await getJson('/api/details/details-' + params.id + '.json');
+  console.log(window)
+  window.addEventListener('scroll', (e) => {
+    console.log(e)
+    // 导航跟随
+    try {
+      // @ts-ignore
+      let elements = details_info.value.content_list.map(el => el.amazon_adv).flat(1).map(el => ({ top: document.getElementById(el.id).offsetTop, ...el })).filter(Boolean)
+      for (let i = 0; i < elements.length; i++) {
+        if (window.pageYOffset >= elements[i].top - 100) {
+          active.value = i
+        }
+      }
+      // @ts-ignore
+      let arr = [...document.querySelectorAll('#app .content .details .details_body .left .included .included_item img')]
+      console.log(arr)
+      if (window.pageYOffset > 400) {
+        arr.map(el => el.style.display = "none")
+      } else {
+        arr.map(el => el.style.display = "block")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
 })
+
 </script>
 <template>
   <div class="details detailsBestpicks" v-if="details_info.title">

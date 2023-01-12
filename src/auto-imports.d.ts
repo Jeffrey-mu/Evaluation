@@ -38,6 +38,7 @@ declare global {
   const getJson: typeof import('./composables/index')['getJson']
   const getQueryParams: typeof import('./composables/index')['getQueryParams']
   const h: typeof import('vue')['h']
+  const handleNextPage: typeof import('./composables/index')['handleNextPage']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
   const inject: typeof import('vue')['inject']
   const isDark: typeof import('./composables/dark')['isDark']
@@ -51,6 +52,7 @@ declare global {
   const logicOr: typeof import('@vueuse/core')['logicOr']
   const makeDestructurable: typeof import('@vueuse/core')['makeDestructurable']
   const markRaw: typeof import('vue')['markRaw']
+  const menu_hooks: typeof import('./composables/index')['menu_hooks']
   const nextTick: typeof import('vue')['nextTick']
   const onActivated: typeof import('vue')['onActivated']
   const onBeforeMount: typeof import('vue')['onBeforeMount']
@@ -88,6 +90,8 @@ declare global {
   const resolveComponent: typeof import('vue')['resolveComponent']
   const resolveRef: typeof import('@vueuse/core')['resolveRef']
   const resolveUnref: typeof import('@vueuse/core')['resolveUnref']
+  const searchResult: typeof import('./composables/index')['searchResult']
+  const searchResultHooks: typeof import('./composables/index')['searchResultHooks']
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
@@ -306,6 +310,7 @@ declare module '@vue/runtime-core' {
     readonly getJson: UnwrapRef<typeof import('./composables/index')['getJson']>
     readonly getQueryParams: UnwrapRef<typeof import('./composables/index')['getQueryParams']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
+    readonly handleNextPage: UnwrapRef<typeof import('./composables/index')['handleNextPage']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isDark: UnwrapRef<typeof import('./composables/dark')['isDark']>
@@ -319,6 +324,7 @@ declare module '@vue/runtime-core' {
     readonly logicOr: UnwrapRef<typeof import('@vueuse/core')['logicOr']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
+    readonly menu_hooks: UnwrapRef<typeof import('./composables/index')['menu_hooks']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>
@@ -356,6 +362,8 @@ declare module '@vue/runtime-core' {
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly resolveRef: UnwrapRef<typeof import('@vueuse/core')['resolveRef']>
     readonly resolveUnref: UnwrapRef<typeof import('@vueuse/core')['resolveUnref']>
+    readonly searchResult: UnwrapRef<typeof import('./composables/index')['searchResult']>
+    readonly searchResultHooks: UnwrapRef<typeof import('./composables/index')['searchResultHooks']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>

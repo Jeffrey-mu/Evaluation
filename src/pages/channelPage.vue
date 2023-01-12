@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { dataModel } from '~/composables';
 let params = getQueryParams()
-let channelResult = ref([])
+let channelResult = ref<dataModel[]>([])
 let total = ref(0)
 let page = ref(0)
 let id = ref('')
@@ -74,9 +75,9 @@ onBeforeMount(async () => {
                 }} days ago
               </div>
               <div class="start" v-if="item.type == 1">
-                <img v-for="el in Math.floor(Number(('' + item.score)))" src="/images/start.png" width="16">
+                <img v-for="_ in Math.floor(Number(('' + item.score)))" src="/images/start.png" width="16">
                 <img src="/images/startx.png" width="16" v-if="('' + item.score).includes('.')">
-                <img v-for="el in 5" src="/images/start-.png" width="16">
+                <img v-for="_ in 5" src="/images/start-.png" width="16">
               </div>
               <div class="text_22">
                 {{ item.description }}
@@ -90,7 +91,7 @@ onBeforeMount(async () => {
               item
             }}</a>
           </span>
-          <span @click="handleNextPage">Next Page</span>
+          <span @click="handleNextPage(`./channelPage?id=${id  + page}&type=4`)">Next Page</span>
         </div>
       </div>
     </div>

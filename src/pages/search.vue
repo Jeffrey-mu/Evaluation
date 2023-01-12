@@ -1,6 +1,13 @@
 
 <script setup lang="ts">
 const { searchResult } = searchResultHooks()
+const router = useRouter()
+function go(path: string) {
+  console.log(useRouter)
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
   <div class="author">
@@ -22,7 +29,7 @@ const { searchResult } = searchResultHooks()
           </div>
         </div>
         <a v-for="item in searchResult"
-          :href="item.type == 1 ? './detailsBestpicks.html?id=' + item.id : './detailsReviews.html?id=' + item.id + '&type=' + type"
+          @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id : './detailsReviews?id=' + item.id + '&type=' + type)"
           class="article_item"
           style="padding-bottom: 20px;margin-top: 20px; border-bottom: 1px solid #ccc; display: inline-block;width: 100%">
           <img class="image_2" style="width: 100%;" referrerpolicy="no-referrer" :src="item.first_picture" />

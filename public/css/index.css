@@ -376,6 +376,7 @@
   display: inline-block;
   width: 25px;
   height: 25px;
+  margin-right: 5px;
 }
 #app .content .details .details_subtitle {
   border-bottom: 3px solid #E71D1D;

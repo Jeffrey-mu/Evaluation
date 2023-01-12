@@ -1,16 +1,37 @@
 <script setup lang="ts">
+import jquery from 'jquery';
+let adv = ref<any[]>([])
 let params = getQueryParams()
 let details_info = ref<any>({})
 console.log(params)
 onBeforeMount(async () => {
   details_info.value = await getJson('/api/details/details-' + params.id + '.json');
+   document.title = details_info.value.title
 })
+onMounted(async () => {
+  adv.value = await getJson('/api/index_1.json');
+  nextTick(() => {
+    adv.value.forEach(item => {
+      item.position_id == 1 ? jquery('head').append(item.script?.replace(/_pageID_/g, params.id)) : ''
+      item.position_id == 2 ? jquery('.detailstop').html(`<div class="Advertisement">Advertisement${item.script?.replace(/_pageID_/g, params.id)}</div>` + jquery('.detailstop').html()) : ''
+      item.position_id == 3 ? jquery('.detailsbottom').html(jquery('.detailsbottom').html() + `<div class="Advertisement">Advertisement${item.script?.replace(/_pageID_/g, params.id)}</div>`) : ''
+      item.position_id == 4 ? jquery('.footer').html(jquery('.footer').html() + `<div style="position:fixed;bottom:0;">${item.script?.replace(/_pageID_/g, params.id)}</div>`) : ''
+    })
+  })
+})
+const router = useRouter()
+function go(path: string) {
+  console.log(useRouter)
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
   <div class="details detailsReviews" v-if="details_info.title">
     <div class="crumbs">
-      <a :href="'/' + '?&type=' + type">Home</a> > <a
-        :href="'./reviewsPage?id=1-19-1' + '&type=' + type">Reviews</a>
+      <a @click="go('/' + '?&type=' + type)">Home</a> > <a
+        @click="go('./reviewsPage?id=1-19-1' + '&type=' + type)">Reviews</a>
     </div>
     <div class="detailstop">
     </div>
@@ -20,30 +41,16 @@ onBeforeMount(async () => {
 
     <p class="text_23">
       <span class="start" style="display: inline_block">
-        <img v-for="el in Math.floor(Number(details_info.score))" src="/images/start.png" width="16">
+        <img v-for="_ in Math.floor(Number(details_info.score))" src="/images/start.png" width="16">
         <img src="/images/startx.png" width="16" v-if="details_info.score.includes('.')">
-        <img v-for="el in 5" src="/images/start-.png" width="16">
+        <img v-for="_ in 5" src="/images/start-.png" width="16">
       </span><span class="text_23"> By {{ details_info.author_name }} published
         {{ Math.floor((+new Date() - +new Date(details_info.release_time)) / 1000 / (60 * 60 * 24)) }} days ago</span>
     </p>
     <p class="text_25">
       {{ details_info.description }}
     </p>
-    <div class="share">
-      <img class="label_1" referrerpolicy="no-referrer" src="/images/faceBook.png"
-        @click="shareLink('https://www.facebook.com/sharer/sharer.php?u=xxxxx')" />
-      <img class="label_2"
-        @click="shareLink('https://twitter.com/intent/tweet?url=xxxxx&text=I found a great article on the Evaluation station website.')"
-        referrerpolicy="no-referrer" src="/images/Twitter.png" />
-      <img class="label_3"
-        @click="shareLink('https://pinterest.com/pin/create/button/?url=xxxxx&media=&description=I found a great article on the Evaluation station website.')"
-        referrerpolicy="no-referrer" src="/images/Q.png" />
-      <img class="label_4"
-        @click="shareLink('https://share.flipboard.com/bookmarklet/popout?v=2&title=I found a great article on the Evaluation station website.&url=xxxxx')"
-        referrerpolicy="no-referrer" src="/images/San.png" />
-      <img class="label_5" @click="shareLink('mailto:info@example.com?&subject=&cc=&bcc=&body=xxxxx%0A')"
-        referrerpolicy="no-referrer" src="/images/Email.png" />
-    </div>
+    <ShareLinkUi />
     <img width="100%" class="details_img" :src="details_info.first_picture" alt="">
     <div class="details_body">
       <div class="left">
@@ -72,7 +79,7 @@ onBeforeMount(async () => {
               <img :src="details_info.author_head_portrait" alt="">
             </div>
             <div class="author_title">
-              <a :href="'author?id=' + details_info.author_id + '-1' + '&type=' + type" class="text_26"
+              <a @click="go('author?id=' + details_info.author_id + '-1' + '&type=' + type)" class="text_26"
                 style="margin:0">
                 {{ details_info.author_name || '--' }}
               </a>
@@ -88,7 +95,7 @@ onBeforeMount(async () => {
             <div class="recommended_by_left">
               <div class="author_nav">MORE ABOUT ELECTRONICS</div>
               <div class="author_article_list">
-                <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+                <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
                   class="author_article_list_item" v-for="item in details_info.category_recommend_list">
                   <img :src="item.first_picture" alt="">
                   <a class="text_21">{{ item.title }}►</a>
@@ -101,7 +108,7 @@ onBeforeMount(async () => {
                 <span>MORE►</span>
               </div>
               <div class="author_article_list">
-                <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+                <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
                   class="author_article_list_item" v-for="item in details_info.newest_recommend">
                   <img :src="item.first_picture" alt="" style="display: block;">
                   <a class="text_21">{{ item.title }}►</a>
@@ -112,40 +119,7 @@ onBeforeMount(async () => {
         </div>
       </div>
       <div class="right">
-        <div class="post">
-          <div class="top">
-            <img src="/images/Email.png" alt="" height="42">
-            <div class="right_flex">
-              <p class="text_21">SIGN UP FOR EMAIL NEWSLETTERS</p>
-            </div>
-
-          </div>
-          <p>
-            Get the best reviews, product advice, newsand more!
-          </p>
-          <input type="text" class="input">
-          <div>
-            <input type="checkbox" name="Contact me with news and offers from otherFuture brands">
-            <label for="Contact me with news and offers from otherFuture brands">Contact me with news and offers
-              from
-              otherFuture brands</label>
-          </div>
-          <div>
-            <input type="checkbox" name="Receive email from us on behalf of ourtrusted
-                            partners or
-                            sponsors">
-            <label for="Receive email from us on behalf of ourtrusted
-                            partners or
-                            sponsors">Receive email from us on behalf of ourtrusted
-              partners or
-              sponsors</label>
-          </div>
-          <div>
-            <button>SIGE ME UP</button>
-          </div>
-          <p>By submitting your information you agree to theTerms Conditions and Privacy Policy and areaged 16 or
-            over</p>
-        </div>
+        <Subscribe />
       </div>
     </div>
   </div>

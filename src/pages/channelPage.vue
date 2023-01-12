@@ -19,13 +19,20 @@ onBeforeMount(async () => {
   page.value = +params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
   menu.value = await getJson('../api/channel/menu.json');
 })
+const router = useRouter()
+function go(path: string) {
+  console.log(useRouter)
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
   <div class="typePage channelPage" v-if="channelResult.length">
     <div class="left">
       <h2 style="margin-top: 20px; font-size: 28px;">{{ menu.find(el => el.id == id.split('-')[1])?.name }}</h2>
       <div class="typePage_top_content">
-        <a :href="channelResult[0].type == 1 ? './detailsBestpicks?id=' + channelResult[0].id + '&type=' + type : './detailsReviews?id=' + channelResult[0].id + '&type=' + type"
+        <a @click="go(channelResult[0].type == 1 ? './detailsBestpicks?id=' + channelResult[0].id + '&type=' + type : './detailsReviews?id=' + channelResult[0].id + '&type=' + type)"
           class="left">
           <img class="image_2" referrerpolicy="no-referrer" :src="channelResult[0].first_picture" />
           <div class="text-group_1 flex-col ">
@@ -38,7 +45,7 @@ onBeforeMount(async () => {
           </div>
         </a>
         <div class="right">
-          <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+          <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
             class="right_item" v-for="item in channelResult.slice(1, 4)">
             <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
             <div class="right_item_text-group_1 flex-col ">
@@ -61,7 +68,7 @@ onBeforeMount(async () => {
           <span class="bottom_border"></span>
         </div>
         <div class="article_list">
-          <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+          <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
             class="article_item" v-for="item in channelResult.slice(4)">
             <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
             <div class="article_item_text-group_1">
@@ -87,7 +94,7 @@ onBeforeMount(async () => {
         </div>
         <div class="article_limit_page">
           <span v-for="item in total">
-            <a :class="{ active: item == page - 1 }" :href="'./channelPage?id=' + id + item + '&type=' + type">{{
+            <a :class="{ active: item == page - 1 }" @click="go('./channelPage?id=' + id + item + '&type=' + type)">{{
               item
             }}</a>
           </span>

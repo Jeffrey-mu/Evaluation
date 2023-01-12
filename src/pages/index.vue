@@ -7,6 +7,12 @@ interface indexResult  {
 onBeforeMount(async () => {
   indexResult.value = await getJson('/api/channel/index.json')
 })
+const router = useRouter()
+function go(path: string) {
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
   <div class="typePage index_content" v-if="indexResult.newest_best_picks_list || indexResult.newest_reviews_list">
@@ -16,7 +22,7 @@ onBeforeMount(async () => {
         <span class="bottom_border"></span>
       </div>
       <a class="right"
-        :href="indexResult.newest_list[0].type == 1 ? './detailsBestpicks?id=' + indexResult.newest_list[0].id + '&type=' + type : './detailsReviews?id=' + indexResult.newest_list[0].id + '&type=' + type">
+        @click="go(indexResult.newest_list[0].type == 1 ? './detailsBestpicks?id=' + indexResult.newest_list[0].id + '&type=' + type : './detailsReviews?id=' + indexResult.newest_list[0].id + '&type=' + type)">
         <img class="image_2" referrerpolicy="no-referrer" :src="indexResult.newest_list[0].first_picture" />
         <div class="text-group_1 flex-col ">
           <h2 class="text_21">
@@ -32,7 +38,7 @@ onBeforeMount(async () => {
       <div class="left">
         <template v-for="item, index in indexResult.newest_list.slice(1, 3)">
           <a class="left_item"
-            :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type">
+            @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)">
             <div class="left_item_text-group_1 flex-col ">
               <h2 class="text_21">
                 {{ item.title }}
@@ -51,7 +57,7 @@ onBeforeMount(async () => {
     </div>
     <div class="bottom">
       <a class="bottom_item" v-for="item in indexResult.newest_list.slice(3, 7)"
-        :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type">
+        @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)">
         <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
         <div class="bottom_item_text-group_1 flex-col ">
           <h2 class="text_21">
@@ -69,10 +75,10 @@ onBeforeMount(async () => {
     <div class="read_more">
       <span>Latest Best Picks</span>
       <span class="bottom_border"></span>
-      <a :href="'./bestpicksPage?id=1-18-1' + '&type=' + type"><span>view more▶</span></a>
+      <a @click="go('./bestpicksPage?id=1-18-1' + '&type=' + type)"><span>view more▶</span></a>
     </div>
     <div class="top_content best_picks">
-      <a class="right" :href="'detailsBestpicks?id=' + indexResult.newest_best_picks_list[0].id + '&type=' + type">
+      <a class="right" @click="go('detailsBestpicks?id=' + indexResult.newest_best_picks_list[0].id + '&type=' + type)">
         <img class="image_2" referrerpolicy="no-referrer" :src="indexResult.newest_best_picks_list[0].first_picture" />
         <div class="text-group_1 flex-col ">
           <h2 class="text_21">
@@ -91,7 +97,7 @@ onBeforeMount(async () => {
       </a>
       <div class="left">
         <template v-for="item, index in indexResult.newest_best_picks_list.slice(1, 4)">
-          <a class="left_item" :href="'detailsBestpicks?id=' + item.id + '&type=' + type">
+          <a class="left_item" @click="go('detailsBestpicks?id=' + item.id + '&type=' + type)">
             <div class="left_item_text-group_1 flex-col ">
               <h2 class="text_21">
                 {{ item.title }}
@@ -113,7 +119,7 @@ onBeforeMount(async () => {
     </div>
     <div class="bottom best_picks_bottom">
       <a class="bottom_item" v-for="item in indexResult.newest_best_picks_list.slice(1, 4)"
-        :href="'detailsBestpicks?id=' + item.id + '&type=' + type">
+        @click="go('detailsBestpicks?id=' + item.id + '&type=' + type)">
         <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
         <div class="bottom_item_text-group_1 flex-col ">
           <h2 class="text_21">
@@ -137,11 +143,11 @@ onBeforeMount(async () => {
     <div class="read_more">
       <span>Latest Reviews</span>
       <span class="bottom_border"></span>
-      <a :href="'./reviewsPage?id=1-19-1' + '&type=' + type"><span>view more▶</span></a>
+      <a @click="go('./reviewsPage?id=1-19-1' + '&type=' + type)"><span>view more▶</span></a>
     </div>
     <div class="bottom reviews_bottom">
       <a class="bottom_item" v-for="item in indexResult.newest_reviews_list.slice(0, 4)"
-        :href="'detailsReviews?id=' + item.id + '&type=' + type">
+        @click="go('detailsReviews?id=' + item.id + '&type=' + type)">
         <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
         <div class="bottom_item_text-group_1 flex-col ">
           <h2 class="text_21">

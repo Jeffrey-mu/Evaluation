@@ -1,5 +1,5 @@
 <script setup lang="ts">
-let authorResult = ref({})
+let authorResult = ref<any>({})
 let total = ref(0)
 let page = ref(0)
 let id = ref('')
@@ -9,8 +9,15 @@ onBeforeMount(async() => {
   authorResult.value = data;
   total.value = Math.ceil(data.total / 10);
   id.value = params.id.slice(0, -1)
-  page.value = params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
+  page.value = +params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
 })
+const router = useRouter()
+function go(path: string) {
+  console.log(useRouter)
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
   <div class="author author_content">
@@ -42,7 +49,7 @@ onBeforeMount(async() => {
         </div>
         <div class="article_list">
 
-          <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+          <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
             class="article_item" v-for="item in authorResult.article_list">
             <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
             <div class="article_item_text-group_1">
@@ -56,9 +63,9 @@ onBeforeMount(async() => {
                 }} days ago
               </div>
               <div class="start" v-if="item.type == 2">
-                <img v-for="el in Math.floor(Number(('' + item.score)))" src="/images/start.png" width="16">
+                <img v-for="_ in Math.floor(Number(('' + item.score)))" src="/images/start.png" width="16">
                 <img src="/images/startx.png" width="16" v-if="('' + item.score).includes('.')">
-                <img v-for="el in 5" src="/images/start-.png" width="16">
+                <img v-for="_ in 5" src="/images/start-.png" width="16">
               </div>
               <div class="text_22">
                 {{ item.main_title }}
@@ -73,7 +80,7 @@ onBeforeMount(async() => {
               item
             }}</a>
           </span>
-          <span @click="handleNextPage">Next Page</span>
+          <span @click="handleNextPage(`./author?id=${id + page}&type=4`)">Next Page</span>
         </div>
       </div>
     </div>

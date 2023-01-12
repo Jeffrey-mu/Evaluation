@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import jquery from 'jquery'
 let params = getQueryParams()
 let details_info = ref<any>({})
 let active = ref<any>('')
+let adv = ref<any[]>([])
 console.log(params)
 watch(active, (value) => {
   // @ts-ignore
@@ -9,7 +11,7 @@ watch(active, (value) => {
 })
 onBeforeMount(async () => {
   details_info.value = await getJson('/api/details/details-' + params.id + '.json');
-  console.log(window)
+  document.title = details_info.value.title
   window.addEventListener('scroll', (e) => {
     console.log(e)
     // 导航跟随
@@ -34,7 +36,24 @@ onBeforeMount(async () => {
     }
   })
 })
-
+onMounted(async () => {
+  adv.value = await getJson('/api/index_1.json');
+  nextTick(() => {
+    adv.value.forEach(item => {
+      item.position_id == 1 ? jquery('head').append(item.script?.replace(/_pageID_/g, params.id)) : ''
+      item.position_id == 2 ? jquery('.detailstop').html(`<div class="Advertisement">Advertisement${item.script?.replace(/_pageID_/g, params.id)}</div>` + jquery('.detailstop').html()) : ''
+      item.position_id == 3 ? jquery('.detailsbottom').html(jquery('.detailsbottom').html() + `<div class="Advertisement">Advertisement${item.script?.replace(/_pageID_/g, params.id)}</div>`) : ''
+      item.position_id == 4 ? jquery('.footer').html(jquery('.footer').html() + `<div style="position:fixed;bottom:0;">${item.script?.replace(/_pageID_/g, params.id)}</div>`) : ''
+    })
+  })
+})
+const router = useRouter()
+function go(path: string) {
+  console.log(useRouter)
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
   <div class="details detailsBestpicks" v-if="details_info.title">
@@ -42,8 +61,8 @@ onBeforeMount(async () => {
     <div class="details_body">
       <div class="left">
         <div class="crumbs">
-          <a :href="'/' + '?&type=' + type">Home</a> > <a
-            :href="'./bestpicksPage?id=1-18-1' + '&type=' + type">Best.picks</a>
+          <a @click="go('/' + '?&type=' + type)">Home</a> > <a
+            @click="go('./bestpicksPage?id=1-18-1' + '&type=' + type)">Best.picks</a>
         </div>
         <div class="detailstop">
         </div>
@@ -59,21 +78,7 @@ onBeforeMount(async () => {
         <p class="text_25">
           {{ details_info.description }}
         </p>
-        <div class="share">
-          <img class="label_1" referrerpolicy="no-referrer" src="/images/faceBook.png"
-            @click="shareLink('https://www.facebook.com/sharer/sharer.php?u=xxxxx')" />
-          <img class="label_2"
-            @click="shareLink('https://twitter.com/intent/tweet?url=xxxxx&text=I found a great article on the Evaluation station website.')"
-            referrerpolicy="no-referrer" src="/images/Twitter.png" />
-          <img class="label_3"
-            @click="shareLink('https://pinterest.com/pin/create/button/?url=xxxxx&media=&description=I found a great article on the Evaluation station website.')"
-            referrerpolicy="no-referrer" src="/images/Q.png" />
-          <img class="label_4"
-            @click="shareLink('https://share.flipboard.com/bookmarklet/popout?v=2&title=I found a great article on the Evaluation station website.&url=xxxxx')"
-            referrerpolicy="no-referrer" src="/images/San.png" />
-          <img class="label_5" @click="shareLink('mailto:info@example.com?&subject=&cc=&bcc=&body=xxxxx%0A')"
-            referrerpolicy="no-referrer" src="/images/Email.png" />
-        </div>
+        <ShareLinkUi />
         <p class="text_22">
           included in this guide:
         </p>
@@ -128,7 +133,7 @@ onBeforeMount(async () => {
               <img :src="details_info.author_head_portrait" alt="">
             </div>
             <div class="author_title">
-              <a :href="'author?id=' + details_info.author_id + '-1' + '&type=' + type" class="text_26"
+              <a @click="go('author?id=' + details_info.author_id + '-1' + '&type=' + type)" class="text_26"
                 style="margin:0">
                 {{ details_info.author_name || '--' }}
               </a>
@@ -145,7 +150,7 @@ onBeforeMount(async () => {
             <div class="recommended_by_left">
               <div class="author_nav">MORE ABOUT ELECTRONICS</div>
               <div class="author_article_list">
-                <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+                <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
                   class="author_article_list_item" v-for="item in details_info.category_recommend_list">
                   <img style="display: block;" :src="item.first_picture" alt="">
                   <a class="text_21">{{ item.title }}►</a>
@@ -158,7 +163,7 @@ onBeforeMount(async () => {
                 <span>MORE►</span>
               </div>
               <div class="author_article_list">
-                <a :href="item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type"
+                <a @click="go(item.type == 1 ? './detailsBestpicks?id=' + item.id + '&type=' + type : './detailsReviews?id=' + item.id + '&type=' + type)"
                   class="author_article_list_item" v-for="item in details_info.newest_recommend">
                   <img :src="item.first_picture" alt="">
                   <a class="text_21">{{ item.title }}►</a>
@@ -169,40 +174,7 @@ onBeforeMount(async () => {
         </div>
       </div>
       <div class="right">
-        <div class="post">
-          <div class="top">
-            <!-- <img src="/images/Email" alt="" height="42"> -->
-            <div class="right_flex">
-              <p class="text_21">SIGN UP FOR EMAIL NEWSLETTERS</p>
-            </div>
-
-          </div>
-          <p>
-            Get the best reviews, product advice, newsand more!
-          </p>
-          <input type="text" class="input">
-          <div>
-            <input type="checkbox" name="Contact me with news and offers from otherFuture brands">
-            <label for="Contact me with news and offers from otherFuture brands">Contact me with news and offers
-              from
-              otherFuture brands</label>
-          </div>
-          <div>
-            <input type="checkbox" name="Receive email from us on behalf of ourtrusted
-                            partners or
-                            sponsors">
-            <label for="Receive email from us on behalf of ourtrusted
-                            partners or
-                            sponsors">Receive email from us on behalf of ourtrusted
-              partners or
-              sponsors</label>
-          </div>
-          <div>
-            <button>SIGE ME UP</button>
-          </div>
-          <p>By submitting your information you agree to theTerms Conditions and Privacy Policy and areaged 16 or
-            over</p>
-        </div>
+        <Subscribe />
       </div>
     </div>
   </div>

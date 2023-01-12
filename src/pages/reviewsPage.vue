@@ -13,12 +13,19 @@ onBeforeMount(async() => {
   id.value = params.id.slice(0, -1)
   page.value = +params.id.slice(-1) == total.value ? 1 : +params.id.slice(-1) + 1
 })
+const router = useRouter()
+function go(path: string) {
+  console.log(path)
+  router.push(path).then(res => {
+    location.reload()
+  })
+}
 </script>
 <template>
 <div class="typePage reviewsPage" v-if="channelResult.length">
   <div class="left">
-    <div class="typePage_top_content">
-      <a :href="'./detailsReviews?id=' + channelResult[0].id + '&type=' + type" class="left">
+    <div class="typePage_top_content" >
+      <a @click="go('./detailsReviews?id=' + channelResult[0].id + '&type=' + type)" class="left">
         <img class="image_2" referrerpolicy="no-referrer" :src="channelResult[0].first_picture" />
         <div class="text-group_1 flex-col">
           <h2 class=" text_21">
@@ -30,7 +37,7 @@ onBeforeMount(async() => {
         </div>
       </a>
       <div class="right">
-        <a :href="'./detailsReviews?id=' + item.id + '&type=' + type" class="right_item"
+        <a @click="go('./detailsReviews?id=' + item.id + '&type=' + type)" class="right_item"
           v-for="item in channelResult.slice(1, 4)">
           <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
           <div class="right_item_text-group_1 flex-col">
@@ -53,7 +60,7 @@ onBeforeMount(async() => {
         <span class="bottom_border"></span>
       </div>
       <div class="article_list">
-        <a :href="'./detailsReviews?id=' + item.id + '&type=' + type" class="article_item"
+        <a @click="go('./detailsReviews?id=' + item.id + '&type=' + type)" class="article_item"
           v-for="item in channelResult.slice(4)">
           <img class="image_2" referrerpolicy="no-referrer" :src="item.first_picture" />
           <div class="article_item_text-group_1">
@@ -80,7 +87,7 @@ onBeforeMount(async() => {
       <div class="article_limit_page">
         <span v-for="item in total">
           <a :class="{ active: item == page - 1 }"
-            :href="'./reviewsPage?id=' + id + item + '&type=' + type">{{ item }}</a>
+            @click="go('./reviewsPage?id=' + id + item + '&type=' + type)">{{ item }}</a>
         </span>
         <span @click="handleNextPage(`./reviewsPage?id=${id + page}&type=4`)">Next Page</span>
       </div>

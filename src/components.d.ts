@@ -12,9 +12,10 @@ declare module '@vue/runtime-core' {
     Header: typeof import('./components/Header.vue')['default']
     Menu: typeof import('./components/Menu.vue')['default']
     MobileMenu: typeof import('./components/MobileMenu.vue')['default']
-    README: typeof import('./components/README.md')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ShareLinkUi: typeof import('./components/ShareLinkUi.vue')['default']
+    Subscribe: typeof import('./components/Subscribe.vue')['default']
     TopRecommendation: typeof import('./components/TopRecommendation.vue')['default']
   }
 }

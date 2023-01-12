@@ -64,5 +64,5 @@ export function menu_hooks() {
 }
 
 export function handleNextPage(path: string) {
-  window.location.href = path
+  go(path)
 }
